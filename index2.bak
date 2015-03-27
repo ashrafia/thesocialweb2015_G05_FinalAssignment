@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<button id="login">Login</button>
+	<div id="data">
+		<span id="first"></span>
+		<span id="last"></span>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	 <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1030864150260599',
+          xfbml      : true,
+          version    : 'v2.1'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+      $(function(){
+      	$('#login').click(function(e){
+      		e.preventDefault();
+      		FB.getLoginStatus(function(response) {
+			  if (response.status === 'connected') {
+			    console.log('Logged in.');
+			   	FB.api('/me', {fields: 'last_name'}, function(response) {
+					$('#last').append("Last Name :"+response.last_name);
+					$('#first').append("Last Name :"+response.first_name);
+
+					FB.api('me/picture', function(Imgresponse){
+						console.log(Imgresponse);
+						console.log(Imgresponse.data.url);
+						var img = '<img src="'+Imgresponse.data.url+'">'
+						$("#data").append(img);
+					})
+
+				});
+			  }
+			  else {
+			    FB.login();
+			  }
+			});
+      	})
+      })
+    </script>
+</body>
+</html>
