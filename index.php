@@ -97,7 +97,7 @@
 			<ul class="right" class="links">
 				<li>
 				<a href="#!" id="login">
-					2Dance
+					<img src="assets/logo.png" alt="" style="height:100%">
 				</a>
 				</li>
 			</ul>

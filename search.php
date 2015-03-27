@@ -141,7 +141,7 @@
 			<ul class="left" id="links">
 				<li>
 				<a href="index.php" id="login">
-					2Dance
+					<img src="assets/logo.png" alt="" style="height:100%">
 				</a>
 				</li>
 			</ul>
