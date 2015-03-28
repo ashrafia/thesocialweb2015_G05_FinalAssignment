@@ -6,17 +6,13 @@
 	$test['height'] = $_POST['height'];
 	$test['style'] = $_POST['style'];
 	$test['facebook_id'] = $_POST['user-id'];
-
 	$link = mysqli_connect("localhost", 'root', '', 'facebook') or die("Error " . mysqli_error($link));
 	$data = $link->query("SELECT * FROM `user` WHERE `facebook_id` != '".$_POST['user-id']."'");
-
 	$groupData = $link->query("SELECT * FROM `group`, `user` WHERE user.user_id = group.user_id AND user.facebook_id = ".$_POST['user-id']);
-
 	$group = [];
 	while ($tempData = $groupData->fetch_assoc()) {
 		array_push($group, $tempData);
 	}
-
 	//echo "<pre>"; print_r($group); echo "</pre>";
 	$result = [];
 	while ($temp = $data->fetch_assoc()) {
@@ -79,7 +75,6 @@
 		min-height: 100vh;
 		flex-direction: column;
 		}
-
 		main {
 			flex: 1 0 auto;
 			padding: 15px;			
@@ -165,13 +160,13 @@
 				<div class="col l6 s12">
 				<h5 class="white-text">We are social</h5>
 				<p class="grey-text text-lighten-4">
-					The awesome social dance with me app
+					The awesome social dance app
 				</p>
 			</div>
 	      </div>
 	      <div class="footer-copyright">
 			<div class="indent">
-				<p class="indent">© 2015 Saskia &amp; Shahnaz</p>
+				<p class="indent">© 2015 Group 5</p>
 			</div>
 	      </div>
 	    </footer>
@@ -249,20 +244,24 @@
 	    	
 	    </form>
 	    </div>
+		
+		<?php //var_dump($test) ?>
+		
 	    <script>
 	    	// Define global App settings
 		window.fbAsyncInit = function() {
 	    	FB.init({
-		      appId      : '416168255230551', // <----------- change this to your api key
+		      appId      : '1030864150260599', // <----------- change this to your api key
 		      xfbml      : true,
 		      version    : 'v2.1'
 	    	});
 	    	var list = <?php echo(json_encode($result)); ?>;
+		
 			
 			$(function(){
 				
-				FB.login(function(response) {
-					if(response.status == "connected") {
+				FB.login(function(login_response) {
+					if(login_response.status == "connected") {
 						$('main').append('<div class="row result">');
 						//console.log(list);
 						FB.api('/me/groups', function(response){
@@ -271,9 +270,9 @@
 									$.each(data.data, function(user, userData){
 										//console.log(userData.id);
 										$.each(list, function(keyLoop, loop){
+											//console.log(keyloop, loop)
 											if(typeof list[keyLoop].group == "undefined")
 												list[keyLoop].group = []
-
 											//console.log(loop.facebook_id);
 											//console.log(loop.facebook_id+" "+userData.id);
 											if(loop.facebook_id == userData.id) {
@@ -287,26 +286,45 @@
 								})
 							})
 							$.each(list, function(key,value){
-								//onsole.log(value.facebook_id);
+								
+								<?php if (isset($test) && isset($test['facebook_id'])) :?>
+								if (value.facebook_id && value.facebook_id == '<?php echo $test['facebook_id']?>'){
+									
+								} else {
+								<?php endif; ?>
+							
+								//console.log(value.facebook_id);
 								if(value.facebook_id.length == 0)
 									var constructor = "error";
 								else
-									var constructor = '/'+value.facebook_id+'/picture';
+									var constructor = '/'+value.facebook_id;
+								
 								if(constructor != "error") {
-									//console.log(value.facebook_id);
-									FB.api(constructor, {type : "square"}, function(response) {
-										console.log(value);
-										var card ='<div class="col s3"><div class="card"><div class="card-image"><img src="https://graph.facebook.com/'+value.facebook_id+'/picture?type=square"></div><div class="card-content">'+value.gender+'<br/>'+value.style+'</br>Matching value '+value.testValue+'<br/>'
-										if(value.group.length > 0) {
-											card += "Mutual Group: <br>"
-											$.each(value.ingroup, function(groupKey, groupData){
-												card += '<a href="http://facebook.com/group/'+groupData.key+'">';
-												card += groupData.value+"<br>";
-											});
-										}
-										card +='<center><a href="http://www.facebook.com/'+value.facebook_id+'"><img src="assets/getincontact.png" height="50" width="50"/></a></center></div></div><div class="col s3"></div>';
-										$('.result').append(card);
-									})
+									
+									console.log(value.facebook_id);
+									FB.api(constructor, function(bio_resp) {
+										console.log(bio_resp);
+										FB.api(constructor+'/picture', {type : "large"}, function(resp) {
+											var card ='<div class="col s3"><div class="card">';
+											card += '<div class="card-image"><img src="https://graph.facebook.com/'+value.facebook_id+'/picture?type=square"></div>';
+											card += '<div class="card-content">'+[bio_resp.first_name, bio_resp.last_name].join(' ');
+											card += '<br/>'+value.gender+'<br/>'+value.style+'</br>Matching value '+value.testValue+'<br/>';
+											if(value.ingroup.length > 0) {
+												card += "Mutual Group: <br>"
+												//console.log(value)
+												$.each(value.ingroup, function(groupKey, groupData){
+													card += '<a href="http://facebook.com/groups/'+groupData.key+'">';
+													card += groupData.value+"<br>";
+												});
+											}
+											card +='<center><a href="http://www.facebook.com/'+value.facebook_id+'"><img src="assets/getincontact.png" height="50" width="50"/></a></center></div></div><div class="col s3"></div>';
+											$('.result').append(card);
+										})
+									});
+										
+									
+								}
+								
 								}
 							});
 							$('main').append('</div>');		
@@ -318,7 +336,6 @@
 				});
 			})
 	  	};
-
 		(function(d, s, id){
 			var js, fjs = d.getElementsByTagName(s)[0];
 			if (d.getElementById(id)) {return;}

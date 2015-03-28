@@ -104,7 +104,7 @@
 			<menuItems class="hide">
 				<ul class="left" class="links">
 					<li>
-						<a href="profile.php">
+						<a href="index.php">
 							Profile
 						</a>
 					</li>
@@ -167,13 +167,13 @@
 				<div class="col l6 s12">
 				<h5 class="white-text">We are social</h5>
 				<p class="grey-text text-lighten-4">
-					The awesome social dance with me app
+					The awesome social dance app
 				</p>
 			</div>
 	      </div>
 	      <div class="footer-copyright">
 			<div class="indent">
-				<p class="indent">© 2015 Saskia &amp; Shahanaz</p>
+				<p class="indent">© 2015 Group 5</p>
 			</div>
 	      </div>
 	    </footer>

@@ -3,7 +3,7 @@
   	// Define global App settings
 	window.fbAsyncInit = function() {
     	FB.init({
-	      appId      : '416168255230551', // <----------- change this to your api key
+	      appId      : '1030864150260599', // <----------- change this to your api key
 	      xfbml      : true,
 	      version    : 'v2.1'
     	});
